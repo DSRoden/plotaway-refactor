@@ -1,0 +1,238 @@
+.trip-page
+  .row.side-bar(ng-if='sideBar')
+    .col-xs-2.col-md-2
+      .btn-toolbar#main-menu(ng-if='showMain')
+        .btn-group
+          button.explore-btn(ng-click='explore()')
+            | Browse
+            span &nbsp
+            i.glyphicon.glyphicon-globe
+        .btn-group
+          button.current-trip(ng-if='showTripSet',ng-click='tripSettings()') Current Itinerary
+            //-span Last Itinerary: {{trip.title.charAt(0).toUpperCase() + trip.title.slice(1)}}
+            span &nbsp
+            span.glyphicon.glyphicon-cog
+        .btn-group.some-pages(ng-if='showPagesBar',dropdown='dropdown', is-open='status.isopen')
+          button.trip-pages.dropdown-toggle(type='button', ng-disabled='disabled')
+            | Pages
+            span.caret
+          ul.dropdown-menu.pages-dashboard-menu
+            li(ng-repeat='page in pages')
+              .btn.page-options-dashboard(ng-click='setPage(page)') {{page.title}}
+        .btn-group
+          button.new-page(ng-click='newPage()')
+            | New Page
+            span &nbsp
+            i.glyphicon.glyphicon-align-justify
+        .btn-group
+          button.new-plot-btn(ng-if="showPlot", ng-click='newPlot()')
+            | Plot
+            span &nbsp
+            i.glyphicon.glyphicon-th-large
+        //-.btn-group
+          //-button.new-note-btn(ng-click='newNote()')
+            //-| Note
+            //-span &nbsp
+            //-i.glyphicon.glyphicon-plus
+        .btn-group(dropdown='dropdown', is-open='status.isopen')
+          button.my-trips.dropdown-toggle(type='button', ng-disabled='disabled')
+            | My Itineraries &nbsp
+            span &nbsp
+            span.caret
+          ul.dropdown-menu.trip-menu
+            li(ng-repeat='trip in trips')
+              .btn.trip-items(ng-click='setTrip(trip)') {{trip.title.charAt(0).toUpperCase() + trip.title.slice(1)}}
+        .btn-group
+          button.new-trip(ng-click='newTrip()')
+            | New Itinerary
+            span &nbsp
+            i.glyphicon.glyphicon-plus
+        .btn-group(dropdown='dropdown', is-open='status.isopen')
+          button.map-btn(ng-click='activateMap()')
+            | Map
+            span &nbsp
+            i.glyphicon.glyphicon-move
+
+    .col-xs-8.col-md-8
+      .exploration(ng-if="showMap")
+        input.location(type='text', ng-model='city.name', googleplace='googleplace')
+        .btn.map-button(ng-click='mapLocation()') Map
+        .btn.map-close(ng-click='closeMap()')
+          i.glyphicon.glyphicon-remove
+        .angular-google-map-container(ng-if='showMap', google-map, draggable='true', center='map.center', zoom='map.zoom', refresh='map.refresh', pan='1', options='options')
+          .marker(marker, coords='marker.coords', options='marker.options', events='marker.events', idkey='marker.id')
+
+
+    .col-xs-8.col-md-8
+      .no-trips(ng-if="notTrips")
+      .no-set-trip(ng-if="noSetTrip")
+      .main-body
+        .trip-settings(ng-if="tripSetOpen")
+          .trip-title
+            h5 {{trip.title}}
+          .pdf-all(ng-click='tripPdf()') Download as a PDF
+          .public-private
+            .btn-group
+              label.btn.private(ng-model='radioModel', btn-radio='\'Left\'', ng-click='makePrivate()') Private
+              label.btn.public(ng-model='radioModel', btn-radio='\'Right\'', ng-click='makePublic()') Public
+          .btn.exit-trip-set(ng-click='closeTripSet()')
+            i.glyphicon.glyphicon-remove
+          .trip-stats
+            p.num-pages Number of Pages: {{pages.length}}
+            p.num-plots Number of Plots: {{allTripPlots.length}}
+            p.num-plots Initial Budget: ${{trip.budget}}
+            p.num-plots Spending Estimate: ${{sum}}
+          .trip-description
+            p Description: {{trip.description}}
+          .trip-dates
+            p Start Date: {{trip.start | date:'dd MMM yyyy'}}
+            p End Date: {{trip.end | date:'dd MMM yyyy'}}
+          .delete-trip
+            .btn.del-trip(ng-click='delTrip()')
+              | Delete
+              i.glyphicon.glyphicon-minus
+          .trip-notes
+            input(name='note', type='text', ng-model='note.info')
+            button.btn.note-btn(ng-click='addNote()') Add Note
+          .trip-notes-table
+            .col-xs-12.col-md-6
+            .col-xs-12.col-md-6
+            .col-xs-12.col-md-6
+            .col-xs-12.col-md-6
+            table.table.table-bordered.notes-table
+              thead
+                tr
+                  th.date Date
+                  th.note-value Note
+              tbody
+                tr(ng-repeat='n in notes')
+                  td.tddate {{n.date | date:'dd MMM yyyy'}}
+                  td.tdvalue{{n.info}}
+
+        .itinerary(ng-if="showPage")
+          .current-page
+            p {{page.title}}
+            .btn.del-page(ng-click='delPage()')
+              | Delete Page
+              i.glyphicon.glyphicon-minus
+          .btn.close-page(ng-click='closePage()')
+            i.glyphicon.glyphicon-remove
+          .btn.pdf-button(ng-click='makePdf()') Download as a PDF
+          .plot-description-dashboard(ng-show="showDescription")
+            p Description: {{describe.describe}}
+          table.table.table-margin.table-height(fixed-header='fixed-header')
+            thead
+              tr
+                th: a(href='', ng-click="sort = 'category'; reverse=!reverse")  Category
+                th Description
+                th: a(href='', ng-click="sort = 'date'; reverse=!reverse") Date
+                th: a(href='', ng-click="sort = 'time'; reverse=!reverse") Time
+                th: a(href='', ng-click="sort = 'cost'; reverse=!reverse") Cost
+                th: a(href='', ng-click="sort = 'priority'; reverse=!reverse") Priority
+                th Delete
+            tbody
+              tr(ng-repeat='plot in plots | orderBy:sort:reverse', ng-class='{acc: plot.category === "Accomodations", tra: plot.category === "Transportation", sight: plot.category === "Sightseeing", eat: plot.category === "Eating", act: plot.category === "Activity", oth: plot.category === "Other", shop: plot.category === "Shopping"}')
+                td(ng-class='{accomodations: plot.category === "Accomodations", transportation: plot.category === "Transportation", sightseeing: plot.category === "Sightseeing", eating: plot.category === "Eating", activity: plot.category === "Activity", other: plot.category === "Other", shopping: plot.category === "Shopping"}')
+                td.descriptiontd(ng-click='description(plot.description)') {{plot.description.substring(0,10)}}...
+                td {{plot.date | date:'dd MMM yyyy'}}
+                td {{plot.time | date:'shortTime'}}
+                td ${{plot.cost}}
+                td {{plot.priority}}
+                td: a(href='', ng-click='deletePlot(plot)') Delete
+
+    .col-xs-2.col-md-2
+
+
+
+   .enter-dashboard(ng-if='mainDashboard')
+     img(ng-src='/img/whereto-01.png')
+     h4 Welcome! Where to?
+     button.make-new(ng-click='newTrip()') Start a new itinerary
+     br
+     button.go-explore(ng-click='explore()') Explore
+
+  //-.everything(ng-show="showEverything")
+  //-.row
+    //-.col-xs-12.col-md-12
+      //-.btn-toolbar.main
+          //-button.btn.tools.dropdown-toggle(type='button', ng-disabled='disabled')
+            //-| Tools &nbsp
+            //-i.glyphicon.glyphicon-globe
+          //-ul.dropdown-menu.tool-menu
+            //-li(ng-repeat='tool in tools')
+              //-.btn.tool-items(ng-click='fetchTool(tool)') {{tool}}
+              //-//next section: add page, pages associated with current trip, save, delete page
+
+            //-button.btn.page-actions.dropdown-toggle(type='button')
+              //-span.caret
+              //-span.sr-only page actions
+            //-ul.dropdown-menu.pages-actions-menu(role='menu', style='text-align: left;')
+              //-li
+                //-a.new-page-pointer(ng-click='newPage()') New &nbsp
+                  //-i.glyphicon.glyphicon-th-list &nbsp
+              //-li.divider
+              //-li
+                //-a(href='#') Edit  &nbsp
+                  //-i.glyphicon.glyphicon-edit &nbsp
+              //-li.divider
+              //-li
+                //-a.delete-page-pointer(ng-click='delPage()') Delete &nbsp
+                  i.glyphicon.glyphicon-remove &nbsp
+            .public-private
+              .btn-group
+                label.btn.btn-primary(ng-model='radioModel', btn-radio='\'Left\'', ng-click='makePrivate()') Private
+                label.btn.btn-primary(ng-model='radioModel', btn-radio='\'Right\'', ng-click='makePublic()') Public
+
+  // wiki, map, and iframes
+  .row
+    .col-xs-12.col-md-8
+
+      //-.itinerary(ng-if="showPage")
+        //-.current-page
+          //-p {{page.title}}
+        //-button.btn.close-page(ng-click='closePage()')
+          //-i.glyphicon.glyphicon-remove
+        //-button.btn.pdf-button(ng-click='makePdf()') Download as a PDF
+        //-table.table.table-margin.table-height(fixed-header='fixed-header')
+          //-thead
+            //-tr
+              //-th: a(href='', ng-click="sort = 'category'; reverse=!reverse")  Category
+              //-th Description
+              //-th: a(href='', ng-click="sort = 'date'; reverse=!reverse") Date
+              //-th: a(href='', ng-click="sort = 'time'; reverse=!reverse") Time
+              //-th: a(href='', ng-click="sort = 'cost'; reverse=!reverse") Cost
+              //-th: a(href='', ng-click="sort = 'priority'; reverse=!reverse") Priority
+              //-th Delete
+          //-tbody
+            //-tr(ng-repeat='plot in plots | orderBy:sort:reverse', ng-class='{acc: plot.category === "Accomodations", tra: plot.category === "Transportation", sight: plot.category === "Sightseeing", eat: plot.category === "Eating", act: plot.category === "Activity", oth: plot.category === "Other", shop: plot.category === "Shopping"}')
+              //-td(ng-class='{accomodations: plot.category === "Accomodations", transportation: plot.category === "Transportation", sightseeing: plot.category === "Sightseeing", eating: plot.category === "Eating", activity: plot.category === "Activity", other: plot.category === "Other", shopping: plot.category === "Shopping"}')
+              //-td(ng-click='description(plot.description)') Description
+              //-td {{plot.date | date:'dd MMM yyyy'}}
+              //-td {{plot.time | date:'shortTime'}}
+              //-td ${{plot.cost}}
+              //-td {{plot.priority}}
+
+    //-.col-xs-12.col-xs-4
+      //-.map(ng-if='showMap')
+        //-input.location(type='text', ng-model='city.name', googleplace='googleplace')
+        //-button.btn.map-button(ng-click='mapLocation()') Map
+        //-button.btn.map-close(ng-click='closeMap()')
+          //-i.glyphicon.glyphicon-remove
+        //-.angular-google-map-container(ng-if='showMap', google-map, draggable='true', center='map.center', zoom='map.zoom', refresh='map.refresh', pan='1', options='options')
+          //-.marker(marker, coords='marker.coords', options='marker.options', events='marker.events', idkey='marker.id')
+      //-.wiki(ng-if='showWiki')
+        //-h5 Find a city or country. Powered by WikiSherpa API.
+        //-input.destination(type='text', ng-model='destination.point', googleplace='googleplace')
+        //-button.btn.wiki-button(ng-click='setDestination()') Find
+        //-button.btn.map-destination-button(ng-click='mapDestination()') Map
+        //-button.btn.wiki-close(ng-click='closeWiki()')
+          //-i.glyphicon.glyphicon-remove
+      //-.wiki-info(ng-if='showAccordian')
+        //-img(ng-src='{{sherpa.images[0].secondUrl}}')
+        //-accordion(close-others='oneAtATime')
+          //-accordion-group(is-open='status.isFirstOpen', is-disabled='status.isFirstDisabled')
+            accordion-heading
+              | Information about {{destination.point}}
+            a(href='{{sherpa.link}}' target='_blank') WikiVoyage link to {{destination.point}}
+              //-iframe#iframe(ng-src='{{sherpa.link}}', width='100%', height='300', frameborder='0')
+

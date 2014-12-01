@@ -1,0 +1,35 @@
+body
+  .row
+    .col-xs-12
+      .intro
+        br
+        br
+        img.main-img(ng-src='/assets/img/plotaway-logo-gray-01.png')
+        h2(typewrite='typewrite', blink-cursor='false', text="Travel itineraries to go.", initial-delay='1s', type-delay='50')
+        br
+        .sign-input
+          .btn-group
+            label.btn.btn-primary(ng-model='radioModel', btn-radio='\'Left\'', ng-click='enableLogin()') Login
+            label.btn.btn-primary(ng-model='radioModel', btn-radio='\'Right\'', ng-click='enableRegister()') Register
+        .sign-in-forms
+          .login(ng-if='showLogin')
+            br
+            form(role='form', non-validate, name='loginForm')
+              .form-group
+                label(for='email') Email
+                input.form-control#email(type='email', name='email', ng-model='user.email', autofocus, required)
+              .form-group
+                label(for='password') Password
+                input.form-control#password(type='password', name='password', ng-model='user.password', required, ng-minlength='3')
+            button.btn.btn-primary.btn-ok(ng-show='loginForm.$valid', ng-click='login()') Login
+
+          .register(ng-if='showRegister')
+            br
+            form(role='form', novalidate, name='registerForm')
+              .form-group
+                label(for='email') Email
+                input.form-control#email(type='email', name='email', ng-model='user.email', autofocus, required)
+              .form-group
+                label(for='password') Password
+                input.form-control#password(type='password', name='password', ng-model='user.password', required, ng-minlength='3')
+              button.btn.btn-primary.btn-ok(ng-show='registerForm.$valid', ng-click='register()') Register

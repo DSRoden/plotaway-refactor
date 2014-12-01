@@ -1,0 +1,34 @@
+.public-itineraries-page
+  .row.side-bar
+    .col-xs-2.col-md-2
+      .btn-toolbar#browse-menu
+        button.back-to-main(ng-if="yesUser", ng-click='backToTrips()') Back to Dashboard
+        button.my-trips.dropdown-toggle(type='button', ng-disabled='disabled')
+          | By Region
+          span.caret
+        ul.dropdown-menu.trip-menu
+          li(ng-repeat='region in regions track by $index')
+            .btn.trip-items(ng-click='getByRegion(region)') {{region}}
+    .col-xs-8.col-md-8
+      .itineraries-body
+        .browse-page(ng-if='showBrowse')
+          .public-itins
+            h5 Public Itineraries
+          table.table.table-margin.table-height.browse-table(fixed-header='fixed-header')
+            thead
+              tr
+                th User
+                th Comments
+                th Itinerary Title
+                th Description
+                th Region
+                th Check Out
+            tbody
+              tr(ng-repeat="itinerary in publicItineraries")
+                td Owner
+                td {{itinerary.comments}}
+                td {{itinerary.title}}
+                td {{itinerary.description}}
+                td {{itinerary.region}}
+                td.see-itinerary(ng-click="displayItin(itinerary)") See Itinerary
+

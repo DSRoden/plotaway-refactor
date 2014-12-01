@@ -1,0 +1,55 @@
+// http://clrs.cc/
+
+@NAVY:    #001F3F;
+@BLUE:    #0074D9;
+@AQUA:    #7FDBFF;
+@TEAL:    #39CCCC;
+@OLIVE:   #3D9970;
+@GREEN:   #2ECC40;
+@LIME:    #01FF70;
+@YELLOW:  #FFDC00;
+@ORANGE:  #FF851B;
+@RED:     #FF4136;
+@MAROON:  #85144B;
+@FUCHSIA: #F012BE;
+@PURPLE:  #B10DC9;
+@BLACK:   #111111;
+@GRAY:    #AAAAAA;
+@SILVER:  #DDDDDD;
+@straw : #E4D96F;
+@pastelRed : #FF6961;
+@timberwolfGray: #DBD7D2;
+
+body{
+  background-image: url('assets/grey/grey.png');
+  background-size: cover;
+}
+
+input.ng-invalid, select.ng-invalid{
+  background-color: @timberwolfGray;
+}
+
+.view-animate-container {
+}
+
+.view-animate {
+  padding: 10px;
+}
+
+//////trip settings/////////////
+/////////////////////////////////
+.view-animate.ng-enter, .view-animate.ng-leave {
+  -webkit-transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+
+.view-animate.ng-enter,
+.view-animate.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
+.view-animate.ng-leave,
+.view-animate.ng-enter.ng-enter-active {
+  opacity:1;
+}
+

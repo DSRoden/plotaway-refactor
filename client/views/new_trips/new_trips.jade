@@ -1,0 +1,47 @@
+div
+  form.form-horizontal(name='_form', ng-submit='submit(_form)', nonvalidate)
+    .modal-header.trip-header
+      button.close(type='button', ng-click='dismiss()', aria-hidden='true') ×
+      h3 New Trip
+      label Title:
+      input.form-control(name='title', type='text', placeholder='Required', ng-model='form.title', required)
+      br
+      label Description:
+      input.form-control(name='description', type='text', ng-model='form.description')
+      br
+      label Region (required):
+      select.form-control(name='region', type='text', ng-model='form.region', required)
+        option(value='Asia') Asia
+        option(value='Africa') Africa
+        option(value='Antartica') Antartica
+        option(value='Australia') Australia
+        option(value='Europe') Europe
+        option(value='Middle East') Middle East
+        option(value='North America') North America
+        option(value='South America') South America
+        br
+    .modal-body.trip-body
+      .form-group(ng-class='{error: _form.title.$error && _form.submitted}')
+        .col-lg-9.col-md-9
+          label Start:
+          span &nbsp
+          input.start(type='date',ng-model='date.start')
+          span &nbsp &nbsp
+          label End:
+          span &nbsp
+          input.end(type='date',ng-model='date.end')
+          br
+          br
+          br
+          label Budget:
+          span &nbsp
+          input.budget(name='budget', type='number', ng-model='form.budget')
+
+
+    .modal-footer.trip-footer
+      a.btn.pull-left.btn-default.cancel(ng-click='dismiss()', tabindex='-1')
+        i.glyphicon.glyphicon-remove
+        | Cancel
+      button.btn.submit-btn-trips(ng-show='_form.$valid', type='submit')
+        i.glyphicon.glyphicon-ok
+        | Save

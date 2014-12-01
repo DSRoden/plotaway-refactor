@@ -1,0 +1,20 @@
+.a-new-page
+  form.form-horizontal(name='_form', ng-submit='submit(_form)', nonvalidate)
+    .modal-header.page-header
+      button.close(type='button', ng-click='dismiss()', aria-hidden='true') ×
+      h3 New Page
+      br
+    .modal-body.page-body
+      .form-group(ng-class='{error: _form.title.$error && _form.submitted}')
+        label.control-label.col-lg-1.col-md-1 Title
+        .col-lg-11.col-md-11
+          input.form-control(name='name', type='text', ng-model='form.title', placeholder='Required', required)
+          br
+    .modal-footer.page-footer
+      a.btn.pull-left.btn-default.cancel(ng-click='dismiss()', tabindex='-1')
+        i.glyphicon.glyphicon-remove
+        | Cancel
+      button.btn.submit-btn-pages(ng-show='_form.$valid', type='submit')
+        i.glyphicon.glyphicon-ok
+        | Save
+

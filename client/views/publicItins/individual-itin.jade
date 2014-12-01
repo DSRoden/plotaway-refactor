@@ -1,0 +1,57 @@
+.public-itinerary-page
+  .row.side-bar
+    .col-md-2
+      .itinerary-menu
+        button.back-itineraries(ng-click='backToItineraries()') Back to Itineraries
+        button.back-dashboard(ng-if="showUserAbilities", ng-click='backToTrips()') Back to Dashboard
+        button.member-pdf(ng-if="disablePDF", ng-click='goLogin()') Become a member and download PDFs of great itineraries
+    .col-md-8
+      .individual-body
+        .browse-individual(ng-if='onePublicItin')
+          .public-itins
+            h5 {{publicItin.title}}
+        .btn-group(dropdown='dropdown', is-open='status.isopen')
+          .btn.pages-itinerary.dropdown-toggle(type='button', ng-disabled='disabled')
+            | Pages
+            span.caret
+          ul.dropdown-menu.pages-public-menu
+            li(ng-repeat='page in pages')
+              .btn.page-options-public(ng-click='seePage(page)') {{page.title}}
+        .browse-individual-table(ng-if='displayPublicPage')
+          .current-page
+            p {{page.title}}
+          .btn.pdf-button(ng-click='makePublicPdf()') Download as a PDF
+          .plot-description(ng-show='showDescription')
+            p Description: {{plot.description}}
+          table.table.table-margin.table-height.public-itinerary-table(fixed-header='fixed-header')
+            thead
+              tr
+                th: a(href='', ng-click="sort = 'category'; reverse=!reverse")  Category
+                th Description
+                th: a(href='', ng-click="sort = 'date'; reverse=!reverse") Date
+                th: a(href='', ng-click="sort = 'time'; reverse=!reverse") Time
+                th: a(href='', ng-click="sort = 'cost'; reverse=!reverse") Cost
+                th: a(href='', ng-click="sort = 'priority'; reverse=!reverse") Priority
+            tbody
+              tr(ng-repeat='plot in plots | orderBy:sort:reverse', ng-class='{acc: plot.category === "Accomodations", tra: plot.category === "Transportation", sight: plot.category === "Sightseeing", eat: plot.category === "Eating", act: plot.category === "Activity", oth: plot.category === "Other", shop: plot.category === "Shopping"}')
+                td(ng-class='{accomodations: plot.category === "Accomodations", transportation: plot.category === "Transportation", sightseeing: plot.category === "Sightseeing", eating: plot.category === "Eating", activity: plot.category === "Activity", other: plot.category === "Other", shopping: plot.category === "Shopping"}')
+                td.click-for-description(ng-click='description(plot)') {{plot.description.substring(0,10)}}...
+                td {{plot.date | date:'dd MMM yyyy'}}
+                td {{plot.time | date:'shortTime'}}
+                td ${{plot.cost}}
+                td {{plot.priority}}
+                br
+          table.table.table-margin.table-height.public-comment-table(fixed-header='fixed-header')
+            thead
+              tr
+                th  User
+                th.thcomment Comment
+            tbody
+              tr(ng-repeat='comment in comments track by $index')
+                td Commenter
+                td.tdcomment {{comment.content}}
+                br
+      .comment-area
+        label Leave a comment
+        input.textarea.comment-box(name='comment', type='text', ng-model='comment.content')
+        .btn.submit-comment-btn(ng-click='addComment()') Submit Comment
