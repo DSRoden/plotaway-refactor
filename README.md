@@ -15,11 +15,6 @@ Plan, share, and downlaod travel itineraries.
 - [x] Browse, download, or leave comments on public itineraries
 
 
-```bash
-$ npm install
-
-```
-
 ### License
 [MIT](LICENSE)
 
