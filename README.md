@@ -1,14 +1,11 @@
-## name of project
-### Code Badges
-build status icon
-coverage status icon
+## PLOTAWAY
 
 ### Screenshots
 ![Image1](https://raw.githubusercontent.com/nss-cohort-2014-06-07/express-template/master/docs/screenshots/one.jpg)
 ![Image2](https://raw.githubusercontent.com/nss-cohort-2014-06-07/express-template/master/docs/screenshots/two.jpg)
 
 ### Description
-write a description about your project
+Plan, share, and downlaod travel itineraries.
 
 ### Models
 ```
@@ -29,18 +26,18 @@ Collection 2
 ```
 
 ### Features
-- [x] Feature 1
-- [ ] Feature 2
-- [x] Feature 3
+- [x] Create an Itinerary
+- [ ] Add pages to your itinerary
+- [x] Add plots (activities) to your itinerary
+- [x] Download your itinerary as a pdf
+- [x] Make your itinerary public 
+- [x] Browse, download, or leave comments on public itineraries
 
-### Running Tests
+
 ```bash
 $ npm install
-$ npm test
-```
 
-### Contributors
-- [Chyld Medford](https://github.com/chyld)
+```
 
 ### License
 [MIT](LICENSE)
